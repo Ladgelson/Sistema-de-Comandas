@@ -1,0 +1,163 @@
+LINKS UTEIS:
+https://medium.com/@fabiano_goes/api-rest-com-pagina%C3%A7%C3%A3o-usando-spring-data-e-query-9eddb29c9223
+/*-----------------------------------------------------------*/
+//@PostMapping("/{id}/pedidos")
+/**Compra compra = compraService.insertNewPedido(id, list);
+			System.out.println(compra.toString());
+			
+			URI uri=ServletUriComponentsBuilder
+					.fromCurrentRequest()
+					.path("/{id}")
+					.buildAndExpand(compra.getId())
+					.toUri();
+			return ResponseEntity.created(uri).build();
+		*/
+
+public List<CompraDTO> searchCompraByMesa2(String mesa, Date minDate, Date maxDate, 
+			/*Pageable pageable*/ int size, int page){
+		maxDate= new Date(maxDate.getTime()+(24*60*60*1000));
+		PageRequest pageRequest = new PageRequest(page, size);
+		Page<Compra> pageCompra = compraRepository.searchCompraByMesa(
+				mesa, 
+				minDate, 
+				maxDate,
+				(Pageable) pageRequest );
+		List<CompraDTO> obj= new ArrayList<>();
+		List<Compra> compras = pageCompra.getContent();
+		for(Compra c : compras) {
+			CompraDTO dto = new CompraDTO(c);
+			List<Pedido> pedidosString= c.getPedidos();
+			for(Pedido pId : pedidosString) {
+				Pedido pedido=pedidoRepository.findOne(pId.getId());
+				dto.insertPedido(pedido);
+			}
+			obj.add(dto);
+		}
+		return obj;
+		
+	}
+/*List<CompraDTO> obj= new ArrayList<>();
+		for(Compra c : compras) {
+			CompraDTO dto = new CompraDTO(c);
+			List<Pedido> pedidosString= c.getPedidos();
+			for(Pedido pId : pedidosString) {
+				Pedido pedido=pedidoRepository.findOne(pId.getId());
+				dto.insertPedido(pedido);
+			}
+			obj.add(dto);
+		}*/
+/*CompraDTO dto = new CompraDTO(obj);
+		List<Pedido> pedidos= obj.getPedidos();
+		for(Pedido pId : pedidos) {
+			Pedido pedido = pedidoRepository.findOne(pId.getId());
+			dto.insertPedido(pedido);
+		}*/
+		
+		/*
+		Compra compra=new Compra(compraDTO);
+		List<Pedido> pedidos= compraDTO.getPedidos();
+		for(Pedido pedido : pedidos) {
+			pedido = savePedido(pedido);
+			compra.insertPedido(pedido);
+		}
+		*/
+		/*
+	public List<Compra> searchByMesa(String mesa){
+		return compraRepository.searchByMesa(mesa);
+	}
+	*/
+
+/*-----------------------------------------------------------*/
+//EXEMPLO
+COMPRA:[
+    {
+        id:dkf8384hiudna929g9139rjf,
+        mesa: "A",
+        horaAbertura:'08:10 12/10/2019',
+        horaEncerramento:'10:00 12/10/2019',
+        cartao: 0.0,
+        dinheiro: 10.0,
+        PEDIDO:[
+            {
+                id:98es1284cnu98ze2h77,
+                idProduto: 1,
+                desc:"peixe e farinha",
+                valorUnit:null,
+                valorPeso:10.00,
+                qtd:10,
+                valor:  100.00,
+                hora:'08:10 12/10/2019', 
+                obs:"com macaxeira", 
+            },
+            {
+                id:98es1284cnu98ze2h77,
+                idProduto: 2,
+                desc:"refri 2l",
+                valorUnit:3.50,
+                valorPeso:null,
+                qtd:2,
+                valor: 7.00,
+                hora:'08:10 12/10/2019',
+                obs:null,
+            },
+        ]
+    },  
+],
+// localhost:8082
+/*-----------------------------------------------------------*/
+//PRODUTOS
+GET: 	/produtos
+GET: 	/produtos/asdqe930w1esd12a821po
+DELETE: /produtos/asddqweqfqwnu9e9m139k
+PUT: 	/produtos/asddqweqfqwnu9e9m139k
+	body:
+	{
+		"nome": 	"Peixe frito",
+		"valor": 	35,
+		"peso": 	true,
+	}
+POST: 	/produtos
+	body:
+	{
+		"nome": 	"Peixe frito",
+		"valor": 	35,
+		"peso": 	true,
+	}
+
+/*-----------------------------------------------------------*/
+//PEDIDOS
+GET: 	/pedidos
+GET: 	/pedidos/asdqe930w1esd12a821po
+DELETE: /pedidos/asddqweqfqwnu9e9m139k
+PUT: 	/pedidos/asddqweqfqwnu9e9m139k
+	body:
+	{
+        
+        "qtdItens": 	1,
+        "total": 		35.0,
+        "peso": 		1.0,
+        "hora": 		1563636600000,
+        "obs": 			"sem espinas",
+        "produto": 		"5d841791e543dd2d78e1e25e"
+        
+    },
+POST: 	/pedidos
+	body:
+	{
+        
+        "qtdItens": 	1,
+        "total": 		35.0,
+        "peso": 		1.0,
+        "hora": 		1563636600000,
+        "obs": 			"sem espinas",
+        "produto": 		"5d841791e543dd2d78e1e25e"
+        
+    },
+
+/*-----------------------------------------------------------*/
+//COMPRAS
+
+
+/*-----------------------------------------------------------*/
+//USUARIOS
+
